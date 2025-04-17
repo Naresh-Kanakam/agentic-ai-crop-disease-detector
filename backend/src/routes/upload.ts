@@ -4,6 +4,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { predictDisease } from "../../utils/predictDisease";
 
 const router = express.Router();
 
@@ -24,10 +25,10 @@ router.post("/upload", upload.single("image"), (req: any, res: any) => {
     return res.status(400).json({ message: "No image uploaded" });
   }
 
-  console.log("✅ Image received:", req.file.filename);
+  const prediction = predictDisease(req.file.filename);
 
   // Here we’ll call Python ML model in next steps
-  res.json({ message: "Image uploaded successfully", filename: req.file.filename });
+  res.json({ message: "Image uploaded successfully", filename: req.file.filename, prediction });
 });
 
 export default router;
